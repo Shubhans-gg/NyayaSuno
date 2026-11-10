@@ -1,0 +1,48 @@
+{
+  "act_name": "Consumer Protection Act, 2019",
+  "short_title": "CPA 2019",
+  "category": "Consumer Rights",
+  "official_url": "https://consumeraffairs.nic.in/acts-and-rules/consumer-protection",
+  "india_code_url": "https://www.indiacode.nic.in/handle/123456789/15256",
+  "jurisdiction": "All India (including Jammu & Kashmir)",
+  "effective_date": "2020-07-20",
+  "summary": "Protects consumer rights against unfair trade practices, defective products, and deficient services. Establishes the Central Consumer Protection Authority (CCPA) and three-tier dispute redressal commissions.",
+  "sections": [
+    {
+      "section": "Section 2(7)",
+      "heading": "Definition of Consumer",
+      "text": "A consumer is any person who buys goods or hires any service for a consideration which has been paid or promised or partly paid. It includes offline and online transactions, electronic means, teleshopping, direct selling, or multi-level marketing. It does not include a person who obtains goods for resale or commercial purpose."
+    },
+    {
+      "section": "Section 2(9)",
+      "heading": "Consumer Rights",
+      "text": "Consumers have six core rights: (i) Right to be protected against marketing of hazardous goods; (ii) Right to be informed about quality, quantity, potency, purity, standard, and price of goods or services; (iii) Right to be assured of access to a variety of goods or services at competitive prices; (iv) Right to be heard and represented in consumer forums; (v) Right to seek redressal against unfair trade practices or restrictive trade practices; (vi) Right to consumer awareness."
+    },
+    {
+      "section": "Section 2(11)",
+      "heading": "Deficiency in Service",
+      "text": "Deficiency means any fault, imperfection, shortcoming, or inadequacy in the quality, nature, and manner of performance that is required to be maintained by law or contract. It includes act of negligence, omission, or deliberate withholding of relevant information."
+    },
+    {
+      "section": "Section 34, 47, 58",
+      "heading": "Pecuniary Jurisdiction of Consumer Commissions",
+      "text": "District Consumer Disputes Redressal Commission: Entertains complaints where value of goods or services paid as consideration does not exceed Rs. 50 Lakhs (revised via Consumer Protection Rules 2021). State Commission: Value exceeds Rs. 50 Lakhs but does not exceed Rs. 2 Crores. National Commission: Value exceeds Rs. 2 Crores."
+    },
+    {
+      "section": "Section 35",
+      "heading": "Manner of Filing Complaint and E-Daakhil",
+      "text": "A complaint can be filed by a consumer, registered consumer association, or Central/State Government. Complaints can be filed in the District Commission within whose local limits the complainant resides or personally works for gain, or where the opposite party resides. Complaints can also be filed electronically via the E-Daakhil portal (edaakhil.nic.in) without needing an advocate."
+    },
+    {
+      "section": "Section 82-87",
+      "heading": "Product Liability",
+      "text": "Product manufacturer, service provider, or product seller is liable to compensate the consumer for any harm caused by a defective product or deficient service. Exceptions apply if the product was misused or altered."
+    },
+    {
+      "section": "National Consumer Helpline",
+      "heading": "Helpline and Grievance Resolution",
+      "text": "National Consumer Helpline (NCH): Call 1915 (Toll-Free, 8 AM - 8 PM, all days except national holidays) or register complaint online at consumerhelpline.gov.in or via WhatsApp at +91 8800001915 or UMANG App. NCH provides pre-litigation grievance redressal through company mediation."
+    }
+  ]
+}
+

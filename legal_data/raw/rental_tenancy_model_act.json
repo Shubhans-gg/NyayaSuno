@@ -1,0 +1,43 @@
+{
+  "act_name": "Model Tenancy Act, 2021 and State Rent Control Frameworks",
+  "short_title": "Tenancy & Rent Regulations",
+  "category": "Rental and Tenancy",
+  "official_url": "https://mohua.gov.in/upload/uploadfiles/files/Model_Tenancy_Act_English.pdf",
+  "india_code_url": "https://www.indiacode.nic.in",
+  "jurisdiction": "State-specific adoption based on Model Tenancy Act guidelines & existing State Rent Control Acts (e.g. Maharashtra Rent Control Act 1999, Delhi Rent Control Act 1958, Karnataka Rent Act 1999, Tamil Nadu Act 42 of 2017)",
+  "effective_date": "2021-06-02",
+  "summary": "Governs rights and obligations of landlords and tenants, tenancy agreements, security deposits, eviction grounds, and dispute settlement through Rent Authorities and Rent Courts.",
+  "sections": [
+    {
+      "section": "MTA Section 4",
+      "heading": "Mandatory Written Tenancy Agreement",
+      "text": "No person shall let or take on rent any premises except by an agreement in writing, which must be jointly informed to the Rent Authority within a period of two months from the date of execution. Verbal tenancy arrangements have no statutory backing for eviction or dispute enforcement."
+    },
+    {
+      "section": "MTA Section 11",
+      "heading": "Security Deposit Limits & Return",
+      "text": "Security deposit to be paid by the tenant in advance shall not exceed two months' rent in case of residential premises, and a maximum of six months' rent in case of non-residential premises. The security deposit shall be refunded to the tenant by the landlord at the time of taking vacant possession of the premises, after making due deduction of any liability relating to arrears of rent and unpaid utility charges."
+    },
+    {
+      "section": "MTA Section 9",
+      "heading": "Revision of Rent",
+      "text": "Revision of rent shall be in terms of the written tenancy agreement. The landlord must give written notice to the tenant three months before the enhanced rent becomes payable. If the tenant does not give notice of termination before the expiry of notice, tenant is deemed to have accepted the revision."
+    },
+    {
+      "section": "MTA Section 20",
+      "heading": "Prohibition of Essential Services Cutoff",
+      "text": "No landlord or property manager shall, either by himself or through any person, cut off or withhold any essential supply or service (such as water, electricity, passage, sanitation, lift) in the premises occupied by the tenant, even in case of non-payment of rent. Doing so is an offense punishable by penalties from the Rent Authority."
+    },
+    {
+      "section": "MTA Section 21 & 22",
+      "heading": "Protection from Arbitrary Eviction & Notice",
+      "text": "A landlord cannot forcibly evict a tenant without approaching the Rent Authority / Rent Court and obtaining an eviction order. Valid grounds for eviction include failure to pay rent for two consecutive months after statutory demand notice, unauthorized subletting, causing substantial structural damage, or bona fide personal need. Self-help eviction (changing locks, throwing out belongings) is illegal."
+    },
+    {
+      "section": "Practical Legal Remedy",
+      "heading": "Steps for Withheld Security Deposit",
+      "text": "1. Send a formal written Demand Letter or Legal Notice via registered post with acknowledgment due (RPAD) giving 15 days to refund the balance deposit. 2. If landlord fails to pay, file an application before the Rent Authority/Rent Court under the State Tenancy Act or file a consumer complaint under Consumer Protection Act (if landlord is a commercial housing provider/coliving/PG) or a summary recovery suit under Order 37 CPC."
+    }
+  ]
+}
+

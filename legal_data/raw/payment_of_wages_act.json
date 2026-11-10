@@ -1,0 +1,43 @@
+{
+  "act_name": "Payment of Wages Act, 1936 & Code on Wages, 2019",
+  "short_title": "Wages & Employment Rights",
+  "category": "Employment and Salary",
+  "official_url": "https://labour.gov.in/sites/default/files/ThePaymentofWagesAct1936.pdf",
+  "india_code_url": "https://www.indiacode.nic.in/handle/123456789/2384",
+  "jurisdiction": "All India",
+  "effective_date": "1936-04-23",
+  "summary": "Regulates the payment of wages to employees, sets timelines for wage disbursement, prohibits unauthorized salary deductions, and provides legal recourse for unpaid or delayed salary.",
+  "sections": [
+    {
+      "section": "Section 4 & 5",
+      "heading": "Time of Payment of Wages",
+      "text": "Every person responsible for the payment of wages shall fix wage-periods not exceeding one month. Where less than 1,000 persons are employed, wages must be paid before the expiry of the 7th day after the last day of the wage period. In other establishments, before the expiry of the 10th day. Where employment is terminated by the employer, wages earned must be paid before the expiry of the second working day from termination."
+    },
+    {
+      "section": "Section 7 - 13",
+      "heading": "Permissible Deductions Only",
+      "text": "Wages must be paid to every employee without unauthorized deductions of any kind except those specified under Section 7 (such as authorized fines, absence from duty, damage to goods expressly entrusted, house accommodation provided by employer, income tax, provident fund). Arbitrary withholding of earned salary as penalty or notice-pay forfeiture beyond contractual limits is illegal."
+    },
+    {
+      "section": "Section 15",
+      "heading": "Claims Arising Out of Deductions or Delay in Payment",
+      "text": "An employee whose wages have been delayed or improperly deducted may apply to the Authority appointed by the State Government (typically the Labour Commissioner or Assistant Labour Commissioner / Labour Court). The Authority may direct refund of the withheld amount together with compensation up to ten times the amount deducted, or up to Rs. 3,000 in case of delayed wages."
+    },
+    {
+      "section": "Industrial Disputes Act, 1947 - Section 33C(2)",
+      "heading": "Recovery of Money Due from Employer",
+      "text": "Where any workman is entitled to receive from the employer any money or any benefit which is capable of being computed in terms of money, the workman may apply to the Labour Court under Section 33C(2) for recovery of the dues as arrears of land revenue."
+    },
+    {
+      "section": "Payment of Gratuity Act, 1972 - Section 4",
+      "heading": "Eligibility for Gratuity",
+      "text": "Gratuity is payable to an employee on the termination of employment after rendering continuous service for not less than five years: (a) on superannuation, (b) on retirement or resignation, or (c) on death or disablement (five-year condition does not apply in case of death or disablement). Maximum tax-free limit is Rs. 20 Lakhs."
+    },
+    {
+      "section": "Practical Legal Procedure",
+      "heading": "Recommended Steps for Unpaid Salary",
+      "text": "1. Send a formal Demand Email detailing unpaid salary months, calculation, and bank records. 2. If unpaid within 7-15 days, send a formal Legal Notice through an advocate or self-drafted under registered post. 3. File a complaint before the District Labour Officer / Assistant Labour Commissioner for conciliation. 4. If unresolved, file an application under Section 15 of Payment of Wages Act or Section 33C(2) of Industrial Disputes Act, or a summary suit in Civil Court under Order 37 CPC."
+    }
+  ]
+}
+

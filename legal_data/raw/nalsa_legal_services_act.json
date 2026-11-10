@@ -1,0 +1,33 @@
+{
+  "act_name": "Legal Services Authorities Act, 1987 & NALSA Guidelines",
+  "short_title": "Free Legal Aid & NALSA",
+  "category": "Basic Legal Procedures and Legal Aid",
+  "official_url": "https://nalsa.gov.in/",
+  "india_code_url": "https://www.indiacode.nic.in/handle/123456789/1944",
+  "jurisdiction": "All India",
+  "effective_date": "1995-11-09",
+  "summary": "Constitutes legal services authorities to provide free and competent legal services to the weaker sections of the society, ensure justice is not denied by reason of economic or other disabilities, and organize Lok Adalats.",
+  "sections": [
+    {
+      "section": "Section 12",
+      "heading": "Criteria for Entitlement to Free Legal Services",
+      "text": "Every person who has to file or defend a case is entitled to free legal services if that person is: (a) a member of a Scheduled Caste or Scheduled Tribe; (b) a victim of trafficking in human beings or beggar; (c) a woman or a child; (d) a person with disability as defined in PwD Act; (e) a person under circumstances of underserved want such as victim of mass disaster, ethnic violence, caste atrocity, flood, drought, earthquake or industrial disaster; (f) an industrial workman; (g) in custody in a protective home or psychiatric hospital; (h) in receipt of annual income less than statutory threshold prescribed by State Govt (ranging between Rs. 1 Lakh to Rs. 3 Lakhs per annum across states, Rs. 5 Lakhs before Supreme Court Legal Services Committee)."
+    },
+    {
+      "section": "Services Covered",
+      "heading": "What is Included in Free Legal Aid",
+      "text": "Free legal aid includes: (1) Payment of court fee, process fees and all other charges payable in connection with any legal proceedings; (2) Providing legal practitioner in legal proceedings; (3) Obtaining and supply of certified copies of orders and other documents; (4) Preparation of appeal, paper book including printing and translation of documents in legal proceedings."
+    },
+    {
+      "section": "Section 19 - 22",
+      "heading": "Lok Adalats & Permanent Lok Adalats",
+      "text": "Lok Adalats are alternative dispute resolution forums where disputes/cases pending in the court of law or at pre-litigation stage are settled amicably. An award made by Lok Adalats is deemed to be a decree of a civil court and is final and binding on all the parties. No appeal lies to any court against the award. No court fee is charged, and if a case already pending in court is settled in Lok Adalat, court fee already paid is refunded."
+    },
+    {
+      "section": "National Legal Aid Helpline",
+      "heading": "Helpline 15100 and Application Process",
+      "text": "Citizens can call the National Legal Aid Helpline Number 15100 (Toll-Free, 24x7) for instant legal counseling. Applications for free legal aid can be submitted online at nalsa.gov.in or in person at any District Legal Services Authority (DLSA) situated inside District Court complexes, or Taluka Legal Services Committee (TLSC)."
+    }
+  ]
+}
+

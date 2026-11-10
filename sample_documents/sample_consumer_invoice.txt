@@ -1,0 +1,28 @@
+TAX INVOICE / RETAIL BILL
+Apex Electronics Retail Ltd.
+GSTIN: 29AAAAA0000A1Z5
+Brigade Road, Bengaluru, Karnataka
+Invoice No: APX-2026-9042
+Date of Issue: 12/08/2026
+
+Customer Name: Smt. Sunita Rao
+Phone: +91 9876543210
+Address: Koramangala, Bengaluru
+
+--------------------------------------------------------------------------------
+Item Description                  HSN Code    Qty    Unit Price    Total (INR)
+--------------------------------------------------------------------------------
+Smart Inverter Refrigerator 340L  8418        1      Rs. 38,000    Rs. 38,000
+Manufacturer Warranty: 2 Years Comprehensive, 10 Years Compressor
+CGST @ 9%:                                                         Rs.  3,420
+SGST @ 9%:                                                         Rs.  3,420
+--------------------------------------------------------------------------------
+GRAND TOTAL (INCL. TAXES):                                        Rs. 44,840
+--------------------------------------------------------------------------------
+Payment Mode: UPI Transaction Ref: 622412891230
+
+TERMS AND CONDITIONS:
+1. Warranty claims are governed by the manufacturer's standard warranty policy.
+2. In case of manufacturing defect within the warranty period, consumer has right to repair, replacement or full refund under Consumer Protection Act, 2019.
+3. For consumer disputes, file complaint at National Consumer Helpline (1915) or E-Daakhil portal (edaakhil.nic.in).
+

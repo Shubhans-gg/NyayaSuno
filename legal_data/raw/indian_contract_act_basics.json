@@ -1,0 +1,33 @@
+{
+  "act_name": "Indian Contract Act, 1872 & Legal Notice Basics",
+  "short_title": "Contracts & Legal Notices",
+  "category": "Basic Legal Procedures and Legal Aid",
+  "official_url": "https://www.indiacode.nic.in/handle/123456789/2187",
+  "india_code_url": "https://www.indiacode.nic.in/handle/123456789/2187",
+  "jurisdiction": "All India",
+  "effective_date": "1872-09-01",
+  "summary": "Governs the law relating to contracts, essential elements of valid agreements, breach of contract, remedies for breach, and principles of legal notices under Indian civil law.",
+  "sections": [
+    {
+      "section": "Section 10 & 2(h)",
+      "heading": "Essential Elements of Valid Contract",
+      "text": "An agreement enforceable by law is a contract. All agreements are contracts if they are made by free consent of parties competent to contract, for a lawful consideration, with a lawful object, and not expressly declared void. Written agreements, stamped as per State Stamp Acts, carry strong evidentiary value under the Indian Evidence Act."
+    },
+    {
+      "section": "Section 73 & 74",
+      "heading": "Compensation for Breach of Contract",
+      "text": "When a contract has been broken, the party who suffers by such breach is entitled to receive from the party who has broken the contract, compensation for any loss or damage caused to him thereby, which naturally arose in the usual course of things. If a sum is named in the contract as penalty or liquidated damages, the party complaining is entitled to receive reasonable compensation not exceeding the amount named."
+    },
+    {
+      "section": "Section 80 CPC / Civil Practice",
+      "heading": "Understanding and Responding to Legal Notices",
+      "text": "A legal notice is a formal written document sent by an aggrieved party giving the other party an opportunity to rectify a grievance or settle a dispute within a stipulated period (usually 15 to 30 days) before initiating litigation. Key rules: (1) Never ignore a legal notice; silence can be portrayed in court as admission of facts; (2) Check the date of receipt and retain the envelope/tracking proof; (3) Verify claims against signed agreements and bank statements; (4) Reply with factual rebuttal drafted clearly or through an advocate; (5) If claims are true, explore amicable settlement."
+    },
+    {
+      "section": "Limitation Act, 1963",
+      "heading": "Period of Limitation for Civil & Money Recovery",
+      "text": "Under the Limitation Act 1963, the time limit to file a suit for recovery of money or breach of contract is generally 3 years from the date when the right to sue accrues (e.g. from the date the payment became due or breach occurred). Filing after 3 years is barred by limitation unless there was written acknowledgment of debt within the limitation period."
+    }
+  ]
+}
+

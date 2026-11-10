@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <circle cx="50" cy="50" r="48" fill="#0B132B"/>
+  <!-- Scales of Justice -->
+  <path d="M50 20 L50 78 M32 30 L68 30" stroke="#F59E0B" stroke-width="4" stroke-linecap="round"/>
+  <path d="M50 20 L50 26" stroke="#F59E0B" stroke-width="6"/>
+  <!-- Left pan -->
+  <path d="M32 30 L22 52 M32 30 L42 52" stroke="#93C5FD" stroke-width="2"/>
+  <path d="M20 52 C20 60 44 60 44 52 Z" fill="#3B82F6"/>
+  <!-- Right pan -->
+  <path d="M68 30 L58 52 M68 30 L78 52" stroke="#93C5FD" stroke-width="2"/>
+  <path d="M56 52 C56 60 80 60 80 52 Z" fill="#3B82F6"/>
+  <!-- Sound waves under base -->
+  <path d="M34 82 L66 82" stroke="#10B981" stroke-width="4" stroke-linecap="round"/>
+  <path d="M40 88 L60 88" stroke="#10B981" stroke-width="3" stroke-linecap="round"/>
+</svg>
+
