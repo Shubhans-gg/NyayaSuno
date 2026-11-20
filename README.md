@@ -1,10 +1,10 @@
 # NyayaSuno – Voice-First AI Legal Information Assistant
-### Built for the Scaler x Wispr Flow Hackathon: "India Runs on Voice"
+### Indian Statutory Legal Information Assistant
 
 > **"Legal clarity, in your language."**  
-> Indian statutory legal clarity demystified for ordinary citizens in Hindi, English, and conversational Hinglish powered by **Wispr Flow**.
+> Indian statutory legal clarity demystified for ordinary citizens in Hindi, English, and conversational Hinglish powered by Voice AI and Grounded Statutory RAG.
 
-[![Wispr Flow](https://img.shields.io/badge/Voice_AI-Wispr_Flow-FF6B00.svg?style=flat&logo=sound)](https://wisprflow.ai)
+[![Voice AI](https://img.shields.io/badge/Voice_AI-Speech_Recognition-FF6B00.svg?style=flat&logo=sound)](#)
 [![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688.svg?style=flat&logo=fastapi)](https://fastapi.tiangolo.com)
 [![React](https://img.shields.io/badge/Frontend-React%2018%20%2B%20Vite-61DAFB.svg?style=flat&logo=react)](https://react.dev)
 [![TailwindCSS](https://img.shields.io/badge/Styling-Tailwind%20CSS-38B2AC.svg?style=flat&logo=tailwind-css)](https://tailwindcss.com)
@@ -13,14 +13,14 @@
 
 ---
 
-## 1. Project Overview & Hackathon Alignment
+## 1. Project Overview
 
-**NyayaSuno** was developed for the **Scaler x Wispr Flow Hackathon** ("India Runs on Voice", Civic Tech / Access to Justice track).
+**NyayaSuno** (न्याय सुनो) is an intelligent, voice-first AI legal information assistant designed to democratize access to Indian statutory law.
 
 Many citizens across India struggle to understand statutory legal terminology, government dispute procedures, lease agreements, unpaid wages, and legal notices.
 
-Powered by **Wispr Flow's ultra-low latency, AI auto-edited voice engine**, NyayaSuno empowers ordinary citizens to explain their problems naturally by speaking in Hindi, English, or conversational Hinglish:
-1. **Wispr Flow Speech Recognition**: Transcribes citizen speech with zero hesitation, automatically removing filler words (`"um"`, `"matlab"`, `"like"`) and formatting legal spoken narratives cleanly into structured queries.
+Powered by **voice AI speech recognition**, NyayaSuno empowers ordinary citizens to explain their problems naturally by speaking in Hindi, English, or conversational Hinglish:
+1. **Voice Speech Recognition**: Transcribes citizen speech with high accuracy, automatically removing filler words (`"um"`, `"matlab"`, `"like"`) and formatting legal spoken narratives cleanly into structured queries.
 2. **Retrieves Verified Statutory Provisions**: RAG pipeline searches official Indian sources (India Code, Consumer Protection Act 2019, Model Tenancy Act, Payment of Wages Act, NALSA).
 3. **Explains Potentially Applicable Laws**: Translates complex sections into simple, jargon-free citizen language.
 4. **Outlines Actionable Next Steps**: Step-by-step checklists of documents needed (e.g., filing on E-Daakhil, sending demand notices, approaching the Rent Authority).
@@ -223,10 +223,9 @@ The frontend is now running at `http://localhost:5173`.
 
 | Service | Environment Variable | Required / Optional | Where to Obtain |
 |---|---|---|---|
-| **Wispr Flow API** | `WISPR_FLOW_API_KEY` | Recommended (Hackathon Primary Engine) | [Wispr Flow Platform](https://platform.wisprflow.ai) |
 | **Google Gemini API** | `GEMINI_API_KEY` | Recommended | [Google AI Studio](https://aistudio.google.com/app/apikey) |
 | **Supabase PostgreSQL** | `SUPABASE_URL`, `SUPABASE_KEY` | Optional (SQLite fallback included) | [Supabase Console](https://supabase.com/dashboard) |
-| **Groq Whisper** | `GROQ_API_KEY` | Optional secondary fallback | [Groq Console](https://console.groq.com) |
+| **Groq Whisper** | `GROQ_API_KEY` | Optional (High-speed Speech Engine) | [Groq Console](https://console.groq.com) |
 | **OpenAI Whisper** | `WHISPER_API_KEY` | Optional secondary fallback | [OpenAI Platform](https://platform.openai.com) |
 
 ---
