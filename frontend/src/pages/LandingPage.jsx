@@ -1,43 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { 
   Scale, Mic, FileText, ArrowRight, ShieldCheck, CheckCircle2, 
-  HelpCircle, Volume2, Sparkles, Building2, Briefcase, ShoppingBag, 
-  BookOpen, PhoneCall, ChevronRight, Play, Square 
+  HelpCircle, Sparkles, Building2, Briefcase, ShoppingBag, 
+  BookOpen, PhoneCall, ChevronRight 
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { ttsService } from '../services/speech';
 
 const LandingPage = () => {
   const navigate = useNavigate();
   const { language } = useAuth();
-  const [isPlayingDemo, setIsPlayingDemo] = useState(false);
-
-  const sampleQuestionHindi = "मेरे मकान मालिक ने ₹50,000 की सिक्योरिटी डिपॉजिट वापस करने से मना कर दिया। मुझे क्या करना चाहिए?";
-  const sampleQuestionEnglish = "My landlord refused to refund my security deposit of ₹50,000 after I moved out. What can I do?";
-
-  const playDemoAudio = () => {
-    if (isPlayingDemo) {
-      ttsService.stop();
-      setIsPlayingDemo(false);
-    } else {
-      setIsPlayingDemo(true);
-      const text = language === 'hi'
-        ? "नमस्ते! न्यायसुनो में आपका स्वागत है। मॉडल टेनेंसी एक्ट के तहत मकान मालिक बिना वैध कारण के सिक्योरिटी डिपॉजिट नहीं रोक सकता। आप रेंट अथॉरिटी में आवेदन कर सकते हैं।"
-        : "Hello! Welcome to NyayaSuno. Under the Model Tenancy Act, a landlord cannot arbitrarily withhold your security deposit upon handover. You have the statutory right to file a claim before the Rent Authority.";
-      ttsService.speak(text, language, () => {
-        setIsPlayingDemo(false);
-      });
-    }
-  };
 
   const featureCards = [
     {
       icon: Mic,
-      title: language === 'hi' ? 'Wispr Flow आवाज़-प्रथम कानूनी बातचीत' : 'Wispr Flow Voice Dictation',
+      title: language === 'hi' ? 'आवाज़-प्रथम कानूनी बातचीत' : 'Voice-First Legal Conversation',
       description: language === 'hi'
-        ? 'Wispr Flow तकनीक से संचालित स्वाभाविक आवाज़ पहचान। यह फिलर शब्दों को हटाकर कानूनी समस्या को सटीक रूप से समझता है।'
-        : 'Powered by Wispr Flow. Ultra-low latency voice recognition that strips filler words and auto-formats speech in Hindi, English, and Hinglish.'
+        ? 'स्वाभाविक आवाज़ पहचान। यह फिलर शब्दों को हटाकर आपकी कानूनी समस्या को सटीक रूप से समझता है।'
+        : 'Advanced voice recognition that strips filler words and understands spoken legal problems in Hindi, English, and Hinglish.'
     },
     {
       icon: ShieldCheck,
@@ -102,14 +82,6 @@ const LandingPage = () => {
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          
-          {/* Trust Badge */}
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-800 text-xs font-semibold mb-6 shadow-xs">
-            <Scale className="w-3.5 h-3.5 text-blue-600" />
-            <span>Built for Scaler x Wispr Flow Hackathon</span>
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-600"></span>
-            <span className="text-blue-700">Voice-First India Code Intelligence</span>
-          </div>
 
           {/* Main Headline */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-navy-900 tracking-tight font-sans max-w-4xl mx-auto leading-tight">
@@ -132,32 +104,15 @@ const LandingPage = () => {
           </p>
 
           {/* CTA Buttons */}
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
+          <div className="mt-8 flex items-center justify-center max-w-md mx-auto">
             <Link
               to="/assistant"
-              className="w-full sm:w-auto px-7 py-3.5 rounded-xl bg-navy-900 hover:bg-navy-800 text-white font-semibold text-sm shadow-md hover:shadow-lg transition flex items-center justify-center gap-2.5 group"
+              className="w-full sm:w-auto px-8 py-4 rounded-xl bg-navy-900 hover:bg-navy-800 text-white font-semibold text-base shadow-md hover:shadow-lg transition flex items-center justify-center gap-2.5 group"
             >
-              <Mic className="w-4 h-4 text-amber-400 group-hover:scale-110 transition" />
+              <Mic className="w-5 h-5 text-amber-400 group-hover:scale-110 transition" />
               <span>{language === 'hi' ? 'न्यायसुनो से बोलकर पूछें' : 'Talk to NyayaSuno'}</span>
               <ArrowRight className="w-4 h-4 text-slate-300 group-hover:translate-x-1 transition" />
             </Link>
-
-            <button
-              onClick={playDemoAudio}
-              className="w-full sm:w-auto px-5 py-3.5 rounded-xl bg-white border border-slate-300 hover:border-slate-400 text-navy-900 font-semibold text-sm shadow-xs hover:bg-slate-50 transition flex items-center justify-center gap-2"
-            >
-              {isPlayingDemo ? (
-                <>
-                  <Square className="w-4 h-4 text-rose-600 fill-rose-600" />
-                  <span>{language === 'hi' ? 'आवाज़ बंद करें' : 'Stop Audio'}</span>
-                </>
-              ) : (
-                <>
-                  <Volume2 className="w-4 h-4 text-blue-600" />
-                  <span>{language === 'hi' ? 'आवाज़ का नमूना सुनें' : 'Listen to Voice Demo'}</span>
-                </>
-              )}
-            </button>
           </div>
 
           {/* Interactive Prompt Teaser */}

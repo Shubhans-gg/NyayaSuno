@@ -27,12 +27,8 @@ const Navbar = () => {
             <Scale className="w-5 h-5" />
           </div>
           <div>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center">
               <span className="text-xl font-bold tracking-tight text-navy-900 font-sans">NyayaSuno</span>
-              <span className="text-xs px-1.5 py-0.5 rounded bg-blue-100 text-blue-700 font-semibold uppercase tracking-wider">AI</span>
-              <span className="hidden lg:inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-900 text-[10px] font-bold">
-                ⚡ Wispr Flow Voice
-              </span>
             </div>
             <p className="text-[11px] text-slate-700 font-medium -mt-1">
               {language === 'hi' ? 'कानूनी स्पष्टता, आपकी भाषा में' : 'Legal clarity, in your language'}

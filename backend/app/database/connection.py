@@ -322,8 +322,8 @@ class DatabaseManager:
         return result
 
     @staticmethod
-    def save_document(user_id: Optional[str], file_name: str, file_path: str, extracted_text: str, document_type: str, analysis_data: Dict[str, Any]) -> Dict[str, Any]:
-        doc_id = str(uuid.uuid4())
+    def save_document(user_id: Optional[str], file_name: str, file_path: str, extracted_text: str, document_type: str, analysis_data: Dict[str, Any], doc_id: Optional[str] = None) -> Dict[str, Any]:
+        doc_id = doc_id or str(uuid.uuid4())
         now = datetime.now(timezone.utc).isoformat()
         doc_data = {
             "id": doc_id,

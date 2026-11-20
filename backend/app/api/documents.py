@@ -63,7 +63,8 @@ async def upload_document(
         file_path=str(save_path),
         extracted_text=analysis.extracted_text_preview,
         document_type=analysis.document_type,
-        analysis_data=analysis.model_dump()
+        analysis_data=analysis.model_dump(),
+        doc_id=doc_id
     )
 
     return analysis
@@ -99,22 +100,30 @@ async def get_document_analysis(doc_id: str):
 async def ask_question_about_document(req: DocumentAnalyzeQuestionRequest):
     """Ask a specific legal question comparing statutory law with the uploaded document."""
     doc = DatabaseManager.get_document(req.document_id)
-    if not doc:
-        raise HTTPException(status_code=404, detail="Referenced document not found.")
+    
+    file_name = doc.get("file_name") if doc else (req.file_name or "Uploaded Legal Document")
+    doc_type = doc.get("document_type") if doc else (req.document_type or "Legal Document")
+    
+    doc_text = ""
+    if doc:
+        doc_text = doc.get("extracted_text") or ""
+        if not doc_text and doc.get("analysis_data"):
+            doc_text = doc["analysis_data"].get("extracted_text_preview", "")
+    if not doc_text and req.document_context:
+        doc_text = req.document_context
 
-    doc_text = doc.get("extracted_text", "")
     citations, statutory_context, is_insufficient = legal_retriever.retrieve(
-        f"{req.question} {doc.get('document_type', '')}", top_k=3
+        f"{req.question} {doc_type}", top_k=3
     )
 
     combined_context = (
-        f"USER UPLOADED DOCUMENT ({doc['file_name']} - {doc.get('document_type')}):\n"
+        f"USER UPLOADED DOCUMENT ({file_name} - {doc_type}):\n"
         f"{doc_text}\n\n"
         f"STATUTORY BENCHMARK LAW:\n{statutory_context}"
     )
 
     answer = await gemini_service.generate_legal_answer(
-        query=f"Based on my uploaded document '{doc['file_name']}', {req.question}",
+        query=f"Based on my uploaded document '{file_name}', {req.question}",
         citations=citations,
         context_text=combined_context,
         is_insufficient=is_insufficient,

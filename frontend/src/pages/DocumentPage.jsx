@@ -62,12 +62,15 @@ const DocumentPage = () => {
       const res = await documentsAPI.askQuestion({
         document_id: analysis.document_id,
         question: question.trim(),
-        language: language
+        language: language,
+        document_context: analysis.extracted_text_preview || analysis.plain_language_summary || '',
+        document_type: analysis.document_type || 'Legal Document',
+        file_name: analysis.file_name || file?.name || 'Uploaded Document'
       });
       setQuestionAnswer(res.data);
     } catch (err) {
       console.error('Error asking document question:', err);
-      alert('Could not answer question based on document.');
+      alert(err.response?.data?.detail || 'Could not answer question based on document. Please try rephrasing your question.');
     } finally {
       setAnswering(false);
     }

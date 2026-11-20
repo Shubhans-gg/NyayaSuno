@@ -112,6 +112,9 @@ class DocumentAnalyzeQuestionRequest(BaseModel):
     document_id: str
     question: str
     language: str = "en"
+    document_context: Optional[str] = None
+    document_type: Optional[str] = None
+    file_name: Optional[str] = None
 
 # --- Report / Feedback Schema ---
 class ReportFeedbackRequest(BaseModel):

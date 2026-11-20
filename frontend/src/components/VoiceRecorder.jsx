@@ -151,8 +151,8 @@ const VoiceRecorder = ({ onTranscriptionComplete, onAudioRecorded, language = 'e
           </div>
 
           <span className="text-[11px] text-slate-300 flex items-center gap-1.5">
-            <span className="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 text-[10px] font-bold">Wispr Flow</span>
-            <span>{language === 'hi' ? 'बोलिए (ऑटो-एडिटिंग ऑन)...' : 'Listening & auto-formatting speech...'}</span>
+            <span className="px-1.5 py-0.5 rounded bg-blue-500/20 text-blue-300 text-[10px] font-bold">Voice AI</span>
+            <span>{language === 'hi' ? 'बोलिए (सुन रहे हैं)...' : 'Listening & transcribing speech...'}</span>
           </span>
         </div>
       )}
@@ -168,7 +168,7 @@ const VoiceRecorder = ({ onTranscriptionComplete, onAudioRecorded, language = 'e
               ? 'w-12 h-12 bg-rose-600 text-white ring-4 ring-rose-300 animate-voice-pulse hover:bg-rose-700'
               : 'w-11 h-11 bg-navy-900 hover:bg-navy-800 text-amber-400 hover:text-amber-300'
           } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
-          title={isRecording ? "Stop Recording" : "Speak naturally via Wispr Flow (Hindi / English / Hinglish)"}
+          title={isRecording ? "Stop Recording" : "Speak naturally in Hindi, English, or Hinglish"}
         >
           {isRecording ? (
             <Square className="w-5 h-5 fill-current" />
@@ -177,10 +177,10 @@ const VoiceRecorder = ({ onTranscriptionComplete, onAudioRecorded, language = 'e
           )}
         </button>
 
-        {/* Wispr Flow small pill indicator */}
+        {/* Small pill indicator */}
         {!isRecording && (
           <span className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-1.5 py-0.2 bg-navy-800 text-amber-400 text-[8px] font-bold rounded-full tracking-wider border border-navy-700/80 shadow-xs uppercase">
-            FLOW
+            VOICE
           </span>
         )}
       </div>

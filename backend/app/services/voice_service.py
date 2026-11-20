@@ -67,7 +67,7 @@ class VoiceService:
                         if text:
                             return {
                                 "text": text.strip(),
-                                "provider": "Wispr Flow (Scaler Hackathon Voice Engine)",
+                                "provider": "Voice AI",
                                 "confidence": "high",
                                 "auto_edited": True
                             }
@@ -123,8 +123,8 @@ class VoiceService:
 
         # 4. Fallback message (for offline/local testing when keys aren't yet populated)
         return {
-            "text": "Audio query received. Speech recognized via Wispr Flow voice architecture.",
-            "provider": "Wispr Flow Voice Adapter",
+            "text": "Audio query received. Speech recognized via Voice AI architecture.",
+            "provider": "Voice AI",
             "confidence": "high"
         }
 

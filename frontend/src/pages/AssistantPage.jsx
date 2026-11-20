@@ -54,14 +54,34 @@ const AssistantPage = () => {
 
   const messagesEndRef = useRef(null);
   const fileInputRef = useRef(null);
+  const chatContainerRef = useRef(null);
+  const isInitialMount = useRef(true);
 
-  // Auto-scroll chat
+  // Auto-scroll chat only when user sends/receives new messages, NOT on initial page mount
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTo({
+        top: chatContainerRef.current.scrollHeight,
+        behavior: 'smooth'
+      });
+    } else {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
+  // Keep window at top on mount
   useEffect(() => {
-    scrollToBottom();
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
+    if (messages.length > 0 || loading) {
+      scrollToBottom();
+    }
   }, [messages, loading]);
 
   // Load conversation list on mount
@@ -212,13 +232,13 @@ const AssistantPage = () => {
       const res = await chatAPI.sendVoice(formData);
       const { transcribed_text, transcription_provider, chat_response } = res.data;
 
-      // Update optimistic user message with actual transcribed text & Wispr Flow badge
+      // Update optimistic user message with actual transcribed text & voice badge
       setMessages(prev => {
         const updated = [...prev];
         const lastIdx = updated.findIndex(m => m.id === tempUserMsg.id);
         if (lastIdx !== -1) {
           updated[lastIdx].content = `"${transcribed_text}"`;
-          updated[lastIdx].provider = transcription_provider || 'Wispr Flow';
+          updated[lastIdx].provider = transcription_provider || 'Voice AI';
         }
         return updated;
       });
@@ -349,7 +369,7 @@ const AssistantPage = () => {
       <main className="flex-1 flex flex-col h-[calc(100vh-4rem)] max-w-4xl mx-auto w-full px-4 sm:px-6">
         
         {/* Messages Scroll Area */}
-        <div className="flex-1 overflow-y-auto py-6 space-y-6">
+        <div ref={chatContainerRef} className="flex-1 overflow-y-auto py-6 space-y-6">
           
           {/* Welcome Screen if empty */}
           {messages.length === 0 && !loading && (
