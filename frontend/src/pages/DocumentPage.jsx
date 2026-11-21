@@ -84,7 +84,7 @@ const DocumentPage = () => {
         <div className="text-center max-w-2xl mx-auto">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200 text-blue-800 text-xs font-semibold mb-3">
             <FileText className="w-3.5 h-3.5 text-blue-600" />
-            <span>AI Document Intelligence & Risk Analysis</span>
+            <span>Statutory Document Intelligence & Risk Analysis</span>
           </div>
           <h1 className="text-3xl font-extrabold text-navy-900 tracking-tight">
             {language === 'hi' ? 'कानूनी दस्तावेज़ एवं नोटिस विश्लेषण' : 'Legal Document & Notice Understanding'}

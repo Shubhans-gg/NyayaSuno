@@ -2,15 +2,18 @@ import os
 import io
 import base64
 import re
-import httpx
+import logging
 from typing import Optional, Dict, Any
 from app.core.config import settings
+from app.core.http_client import HTTPClientPool
+
+logger = logging.getLogger(__name__)
 
 class VoiceService:
     """
     Handles Speech-To-Text and Text-To-Speech preparation.
-    Primary STT Engine: Wispr Flow (Official integration for Scaler x Wispr Flow Hackathon - India Runs on Voice).
-    Secondary STT Fallbacks: Groq Whisper, Gemini Multimodal, Native Web Speech.
+    Integrates resilient multi-provider voice processing: Voice AI REST API,
+    Groq Whisper, Gemini Multimodal, and Native Speech Fallbacks.
     """
 
     def __init__(self):
@@ -22,12 +25,12 @@ class VoiceService:
         self.gemini_api_key = settings.GEMINI_API_KEY
 
     async def warm_up_wispr_flow(self):
-        """Warm up Wispr Flow connection pool to eliminate cold-start latency."""
+        """Warm up connection pool to eliminate cold-start latency."""
         if not self.wispr_flow_api_key:
             return
         try:
-            async with httpx.AsyncClient(timeout=4.0) as client:
-                await client.get(self.wispr_flow_warmup_url)
+            client = HTTPClientPool.get_client()
+            await client.get(self.wispr_flow_warmup_url, timeout=4.0)
         except Exception:
             # Non-blocking warmup
             pass
@@ -35,12 +38,14 @@ class VoiceService:
     async def transcribe_audio_bytes(self, audio_bytes: bytes, mime_type: str = "audio/webm", language: str = "en") -> Dict[str, Any]:
         """
         Transcribe audio using:
-        1. Wispr Flow API (Primary engine for Scaler x Wispr Flow Hackathon)
+        1. Voice AI REST API (Primary streaming voice engine)
         2. Groq Whisper (ultra-fast transcription) if GROQ_API_KEY is present
-        3. Gemini 1.5 Flash REST Multimodal Audio if GEMINI_API_KEY is present
-        4. Native fallback message explaining citizen voice input
+        3. Gemini 2.0 Flash REST Multimodal Audio if GEMINI_API_KEY is present
+        4. Resilient fallback message explaining citizen voice input
         """
-        # 1. PRIMARY: Wispr Flow Voice Interface
+        client = HTTPClientPool.get_client()
+
+        # 1. PRIMARY: Voice AI Interface
         if self.wispr_flow_api_key:
             try:
                 # Trigger connection warm-up
@@ -59,20 +64,19 @@ class VoiceService:
                     "Content-Type": "application/json"
                 }
 
-                async with httpx.AsyncClient(timeout=20.0) as client:
-                    resp = await client.post(self.wispr_flow_api_url, json=payload, headers=headers)
-                    if resp.status_code == 200:
-                        data = resp.json()
-                        text = data.get("text", "")
-                        if text:
-                            return {
-                                "text": text.strip(),
-                                "provider": "Voice AI",
-                                "confidence": "high",
-                                "auto_edited": True
-                            }
+                resp = await client.post(self.wispr_flow_api_url, json=payload, headers=headers, timeout=20.0)
+                if resp.status_code == 200:
+                    data = resp.json()
+                    text = data.get("text", "")
+                    if text:
+                        return {
+                            "text": text.strip(),
+                            "provider": "Voice AI",
+                            "confidence": "high",
+                            "auto_edited": True
+                        }
             except Exception as e:
-                print(f"Wispr Flow transcription error: {e}. Trying secondary fallbacks...")
+                logger.warning(f"Voice AI transcription error: {e}. Trying secondary fallbacks...")
 
         # 2. SECONDARY: Groq Whisper API
         if self.groq_api_key:
@@ -84,13 +88,12 @@ class VoiceService:
                     "language": "hi" if language == "hi" else "en",
                     "response_format": "json"
                 }
-                async with httpx.AsyncClient(timeout=20.0) as client:
-                    resp = await client.post("https://api.groq.com/openai/v1/audio/transcriptions", headers=headers, files=files, data=data)
-                    if resp.status_code == 200:
-                        text = resp.json().get("text", "")
-                        return {"text": text, "provider": "Groq Whisper", "confidence": "high"}
+                resp = await client.post("https://api.groq.com/openai/v1/audio/transcriptions", headers=headers, files=files, data=data, timeout=20.0)
+                if resp.status_code == 200:
+                    text = resp.json().get("text", "")
+                    return {"text": text, "provider": "Groq Whisper", "confidence": "high"}
             except Exception as e:
-                print(f"Groq Whisper transcription failed: {e}")
+                logger.error(f"Groq Whisper transcription failed: {e}")
 
         # 3. TERTIARY: Gemini Flash REST multimodal
         if self.gemini_api_key:
@@ -110,16 +113,15 @@ class VoiceService:
                         ]
                     }]
                 }
-                async with httpx.AsyncClient(timeout=25.0) as client:
-                    resp = await client.post(url, headers=gemini_headers, json=payload)
-                    if resp.status_code == 200:
-                        res_json = resp.json()
-                        candidates = res_json.get("candidates", [])
-                        if candidates:
-                            transcribed_text = candidates[0]["content"]["parts"][0]["text"].strip()
-                            return {"text": transcribed_text, "provider": "Gemini Multimodal STT", "confidence": "high"}
+                resp = await client.post(url, headers=gemini_headers, json=payload, timeout=25.0)
+                if resp.status_code == 200:
+                    res_json = resp.json()
+                    candidates = res_json.get("candidates", [])
+                    if candidates:
+                        transcribed_text = candidates[0]["content"]["parts"][0]["text"].strip()
+                        return {"text": transcribed_text, "provider": "Gemini Multimodal STT", "confidence": "high"}
             except Exception as e:
-                print(f"Gemini Audio STT failed: {e}")
+                logger.error(f"Gemini Audio STT failed: {e}")
 
         # 4. Fallback message (for offline/local testing when keys aren't yet populated)
         return {

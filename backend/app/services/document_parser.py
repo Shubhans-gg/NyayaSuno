@@ -1,9 +1,13 @@
 import os
 import re
+import logging
 from pathlib import Path
 from typing import Dict, Any, List, Optional, Tuple
+from datetime import datetime, timezone
 import pypdf
 from PIL import Image
+
+logger = logging.getLogger(__name__)
 
 try:
     import pytesseract
@@ -13,6 +17,17 @@ except Exception:
 
 from app.models.schemas import DocumentAnalysisResponse, ClauseItem
 from app.core.config import UPLOADS_DIR, settings
+
+# Precompiled regular expressions for extreme parsing performance
+COMPILED_DATE_PATTERNS = [
+    re.compile(r'\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b'),
+    re.compile(r'\b\d{1,2}(?:st|nd|rd|th)?\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{2,4}\b', re.IGNORECASE)
+]
+
+RENTAL_KEYWORDS = frozenset(["rent agreement", "tenancy agreement", "lease deed", "licensor", "licensee", "lessor", "lessee", "security deposit"])
+NOTICE_KEYWORDS = frozenset(["legal notice", "under section 80", "demand notice", "advocate", "my client", "hereby call upon you"])
+EMPLOYMENT_KEYWORDS = frozenset(["offer letter", "employment contract", "appointment letter", "salary", "probation period", "non-disclosure", "ctc"])
+INVOICE_KEYWORDS = frozenset(["tax invoice", "retail invoice", "bill of supply", "gstin", "warranty", "consumer invoice"])
 
 class DocumentParserService:
     """Extracts text, identifies legal document type, and analyzes clauses & key dates."""
@@ -30,7 +45,7 @@ class DocumentParserService:
                 if text:
                     extracted_text += text + "\n"
         except Exception as e:
-            print(f"pypdf extraction error: {e}")
+            logger.warning(f"pypdf extraction error: {e}")
 
         # If digital text was found
         if len(extracted_text.strip()) > 50:
@@ -39,16 +54,13 @@ class DocumentParserService:
         # If scanned / empty text, try OCR
         if PYTESSERACT_AVAILABLE:
             try:
-                # If tesseract is installed on the host machine
-                ocr_text = ""
-                # Could convert pages to images if pdf2image is present, or report scanned document
                 return (
                     "This document appears to be a scanned PDF or image. "
                     "Digital text layer was not detected. Please upload a clear digital copy or image.",
                     "Low (Scanned Document - Manual Review Recommended)"
                 )
             except Exception as e:
-                print(f"OCR failed: {e}")
+                logger.error(f"OCR failed: {e}")
 
         return (
             extracted_text if extracted_text else "No machine-readable text could be extracted from this PDF.",
@@ -67,19 +79,19 @@ class DocumentParserService:
                 return ocr_text.strip(), "Medium (Tesseract OCR)"
             return "Image text was too low-resolution or handwritten to recognize clearly.", "Low"
         except Exception as e:
-            print(f"Pytesseract error: {e}")
+            logger.error(f"Pytesseract error: {e}")
             return f"Error executing image OCR: {str(e)}", "Error"
 
     def classify_document_type(self, text: str) -> str:
         """Classify the legal document into standard categories based on keywords."""
         lower = text.lower()
-        if any(w in lower for w in ["rent agreement", "tenancy agreement", "lease deed", "licensor", "licensee", "lessor", "lessee", "security deposit"]):
+        if any(w in lower for w in RENTAL_KEYWORDS):
             return "Rental / Lease Agreement"
-        elif any(w in lower for w in ["legal notice", "under section 80", "demand notice", "advocate", "my client", "hereby call upon you"]):
+        elif any(w in lower for w in NOTICE_KEYWORDS):
             return "Legal Notice"
-        elif any(w in lower for w in ["offer letter", "employment contract", "appointment letter", "salary", "probation period", "non-disclosure", "ctc"]):
+        elif any(w in lower for w in EMPLOYMENT_KEYWORDS):
             return "Employment Contract / Appointment Letter"
-        elif any(w in lower for w in ["tax invoice", "retail invoice", "bill of supply", "gstin", "warranty", "consumer invoice"]):
+        elif any(w in lower for w in INVOICE_KEYWORDS):
             return "Consumer Invoice / Bill"
         return "General Legal Document"
 
@@ -102,14 +114,10 @@ class DocumentParserService:
 
         doc_type = self.classify_document_type(extracted_text)
 
-        # Extract dates using regex
-        date_patterns = [
-            r'\b\d{1,2}[/-]\d{1,2}[/-]\d{2,4}\b',
-            r'\b\d{1,2}(?:st|nd|rd|th)?\s+(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[a-z]*\s+\d{2,4}\b'
-        ]
+        # Extract dates using precompiled regexes
         found_dates = []
-        for pat in date_patterns:
-            matches = re.findall(pat, extracted_text, re.IGNORECASE)
+        for pat in COMPILED_DATE_PATTERNS:
+            matches = pat.findall(extracted_text)
             for m in matches:
                 if m not in found_dates:
                     found_dates.append(m)
@@ -265,7 +273,6 @@ class DocumentParserService:
             risks = ["Unclear clauses should be verified by a legal counsel."]
             applicable_laws = ["Indian Contract Act, 1872"]
 
-        from datetime import datetime, timezone
         return DocumentAnalysisResponse(
             document_id=document_id,
             file_name=file_name,

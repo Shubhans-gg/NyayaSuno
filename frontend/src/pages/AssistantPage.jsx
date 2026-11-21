@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { 
   Send, Mic, Paperclip, Plus, Trash2, MessageSquare, 
@@ -58,7 +58,7 @@ const AssistantPage = () => {
   const isInitialMount = useRef(true);
 
   // Auto-scroll chat only when user sends/receives new messages, NOT on initial page mount
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTo({
         top: chatContainerRef.current.scrollHeight,
@@ -67,7 +67,7 @@ const AssistantPage = () => {
     } else {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  };
+  }, []);
 
   // Keep window at top on mount
   useEffect(() => {
@@ -82,37 +82,9 @@ const AssistantPage = () => {
     if (messages.length > 0 || loading) {
       scrollToBottom();
     }
-  }, [messages, loading]);
+  }, [messages, loading, scrollToBottom]);
 
-  // Load conversation list on mount
-  useEffect(() => {
-    loadConversations();
-  }, []);
-
-  // Handle URL query parameter pre-fill
-  useEffect(() => {
-    const q = searchParams.get('q');
-    if (q) {
-      handleSendMessage(q);
-    }
-  }, [searchParams]);
-
-  const loadConversations = async () => {
-    try {
-      const res = await chatAPI.getConversations();
-      setConversations(res.data);
-      if (res.data.length > 0 && !activeConvId) {
-        // Load most recent
-        loadConversationMessages(res.data[0].id);
-      }
-    } catch (err) {
-      console.error('Error loading conversations:', err);
-    } finally {
-      setInitialLoading(false);
-    }
-  };
-
-  const loadConversationMessages = async (convId) => {
+  const loadConversationMessages = useCallback(async (convId) => {
     try {
       setActiveConvId(convId);
       const res = await chatAPI.getConversation(convId);
@@ -120,19 +92,49 @@ const AssistantPage = () => {
     } catch (err) {
       console.error('Error fetching conversation messages:', err);
     }
-  };
+  }, []);
 
-  const handleNewChat = () => {
+  const loadConversations = useCallback(async () => {
+    try {
+      const params = {};
+      if (!user) {
+        const guestIds = JSON.parse(localStorage.getItem('nyayasuno_guest_convs') || '[]');
+        if (guestIds.length === 0) {
+          setConversations([]);
+          return;
+        }
+        params.ids = guestIds.join(',');
+      }
+      const res = await chatAPI.getConversations(params);
+      setConversations(res.data);
+    } catch (err) {
+      console.error('Error loading conversations:', err);
+    } finally {
+      setInitialLoading(false);
+    }
+  }, [user]);
+
+  // Load conversation list on mount or when auth state changes
+  useEffect(() => {
+    loadConversations();
+  }, [loadConversations]);
+
+  const handleNewChat = useCallback(() => {
     setActiveConvId(null);
     setMessages([]);
     setAttachedDoc(null);
     setInputText('');
-  };
+  }, []);
 
-  const handleDeleteConversation = async (convId, e) => {
+  const handleDeleteConversation = useCallback(async (convId, e) => {
     e.stopPropagation();
     try {
       await chatAPI.deleteConversation(convId);
+      if (!user) {
+        const guestIds = JSON.parse(localStorage.getItem('nyayasuno_guest_convs') || '[]');
+        const updated = guestIds.filter(id => id !== convId);
+        localStorage.setItem('nyayasuno_guest_convs', JSON.stringify(updated));
+      }
       setConversations(prev => prev.filter(c => c.id !== convId));
       if (activeConvId === convId) {
         handleNewChat();
@@ -140,9 +142,9 @@ const AssistantPage = () => {
     } catch (err) {
       console.error('Error deleting conversation:', err);
     }
-  };
+  }, [activeConvId, handleNewChat, user]);
 
-  const handleSendMessage = async (textToSend = null) => {
+  const handleSendMessage = useCallback(async (textToSend = null) => {
     const messageContent = (textToSend || inputText).trim();
     if (!messageContent || loading) return;
 
@@ -169,9 +171,16 @@ const AssistantPage = () => {
 
       const { conversation_id, message_id, content, structured_data, created_at } = res.data;
 
-      // Update active conv ID
+      // Update active conv ID & save to guest tracking if guest
       if (!activeConvId) {
         setActiveConvId(conversation_id);
+        if (!user) {
+          const guestIds = JSON.parse(localStorage.getItem('nyayasuno_guest_convs') || '[]');
+          if (!guestIds.includes(conversation_id)) {
+            guestIds.unshift(conversation_id);
+            localStorage.setItem('nyayasuno_guest_convs', JSON.stringify(guestIds));
+          }
+        }
         loadConversations();
       }
 
@@ -208,10 +217,18 @@ const AssistantPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [inputText, loading, attachedDoc, activeConvId, language, user, loadConversations]);
+
+  // Handle URL query parameter pre-fill
+  useEffect(() => {
+    const q = searchParams.get('q');
+    if (q) {
+      handleSendMessage(q);
+    }
+  }, [searchParams, handleSendMessage]);
 
   // Voice recording completion handler
-  const handleAudioRecorded = async (audioBlob, mimeType, transcriptFallback) => {
+  const handleAudioRecorded = useCallback(async (audioBlob, mimeType, transcriptFallback) => {
     if (!audioBlob) return;
     setLoading(true);
 
@@ -243,9 +260,16 @@ const AssistantPage = () => {
         return updated;
       });
 
-      // Set conversation ID
+      // Set conversation ID & update guest tracking if guest
       if (!activeConvId && chat_response.conversation_id) {
         setActiveConvId(chat_response.conversation_id);
+        if (!user) {
+          const guestIds = JSON.parse(localStorage.getItem('nyayasuno_guest_convs') || '[]');
+          if (!guestIds.includes(chat_response.conversation_id)) {
+            guestIds.unshift(chat_response.conversation_id);
+            localStorage.setItem('nyayasuno_guest_convs', JSON.stringify(guestIds));
+          }
+        }
         loadConversations();
       }
 
@@ -272,7 +296,7 @@ const AssistantPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [activeConvId, language, user, loadConversations]);
 
   // Direct document attachment upload
   const handleFileUpload = async (e) => {

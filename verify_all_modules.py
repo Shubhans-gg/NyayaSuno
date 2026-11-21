@@ -134,6 +134,14 @@ def test_5_database_persistence():
     rep = DatabaseManager.save_report(message_id=msg2["id"], reason="Accuracy check", details="Self test verification", conversation_id=conv["id"])
     print(f"Filed test report: {rep['id']}", flush=True)
     assert rep["id"] is not None
+
+    # Clean up test artifacts to keep database pristine
+    DatabaseManager.delete_conversation(conv["id"])
+    from app.database.connection import get_sqlite_conn
+    with get_sqlite_conn() as conn:
+        conn.execute("DELETE FROM users WHERE id = ?", (user["id"],))
+        conn.commit()
+
     print(" Database Persistence Passed.", flush=True)
 
 def test_6_statutory_knowledge_base():

@@ -1,18 +1,33 @@
+import time
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.gzip import GZipMiddleware
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
-import time
 from app.core.config import settings, UPLOADS_DIR
+from app.core.http_client import HTTPClientPool
 from app.api import auth, chat, documents, legal
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Application lifespan manager for graceful resource lifecycle management."""
+    # Startup actions
+    yield
+    # Shutdown actions
+    await HTTPClientPool.close()
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
     description="Voice-First AI Legal Information Assistant grounded in Indian Statutory Law (CPA 2019, Model Tenancy Act, Wages Act, NALSA).",
     version="1.0.0",
     docs_url="/docs",
-    redoc_url="/redoc"
+    redoc_url="/redoc",
+    lifespan=lifespan
 )
+
+# Compression Middleware (reduces payload latency over wire)
+app.add_middleware(GZipMiddleware, minimum_size=1000)
 
 # CORS Setup
 app.add_middleware(

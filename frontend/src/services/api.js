@@ -44,7 +44,7 @@ export const chatAPI = {
   sendVoice: (formData) => api.post('/chat/voice', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   }),
-  getConversations: () => api.get('/conversations'),
+  getConversations: (params) => api.get('/conversations', { params }),
   getConversation: (id) => api.get(`/conversations/${id}`),
   deleteConversation: (id) => api.delete(`/conversations/${id}`),
   reportAnswer: (data) => api.post('/report', data),

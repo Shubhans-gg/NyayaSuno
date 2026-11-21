@@ -87,11 +87,15 @@ const LandingPage = () => {
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-navy-900 tracking-tight font-sans max-w-4xl mx-auto leading-tight">
             {language === 'hi' ? (
               <>
-                कानूनी स्पष्टता, <span className="text-blue-600">आपकी अपनी भाषा में।</span>
+                कानूनी स्पष्टता,
+                <br />
+                <span className="text-blue-600">आपकी अपनी भाषा में।</span>
               </>
             ) : (
               <>
-                Indian Legal Clarity, <span className="text-blue-600">In Your Own Voice.</span>
+                Indian Legal Clarity,
+                <br />
+                <span className="text-blue-600">In Your Own Voice.</span>
               </>
             )}
           </h1>

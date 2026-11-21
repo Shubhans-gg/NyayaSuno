@@ -1,10 +1,13 @@
 import json
 import re
 import os
-import httpx
+import logging
 from typing import Dict, Any, List, Optional
 from app.core.config import settings
+from app.core.http_client import HTTPClientPool
 from app.models.schemas import LegalAnswerStructured, LegalSourceCitation
+
+logger = logging.getLogger(__name__)
 
 # Prevent SSL keylogger file permission errors on Windows
 os.environ.pop("SSLKEYLOGFILE", None)
@@ -99,43 +102,44 @@ class GeminiService:
                 "Content-Type": "application/json"
             }
 
+            client = HTTPClientPool.get_client()
+
             for model_name in self.models_to_try:
                 try:
                     # Support both standard header (required for new AQ. Auth keys) and URL query
                     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={self.api_key.strip()}"
-                    async with httpx.AsyncClient(timeout=15.0) as client:
-                        resp = await client.post(url, headers=gemini_headers, json=payload)
-                        if resp.status_code == 200:
-                            res_json = resp.json()
-                            candidates = res_json.get("candidates", [])
-                            if candidates:
-                                raw_text = candidates[0]["content"]["parts"][0]["text"].strip()
-                                # Clean markdown JSON wrappers if present
-                                raw_text = re.sub(r"^```json\s*", "", raw_text)
-                                raw_text = re.sub(r"\s*```$", "", raw_text)
-                                parsed = json.loads(raw_text)
-                                print(f" Gemini API responded successfully with model '{model_name}'.")
-                                return LegalAnswerStructured(
-                                    understanding=parsed.get("understanding", "We analyzed your situation."),
-                                    relevant_laws=parsed.get("relevant_laws", []),
-                                    simple_explanation=parsed.get("simple_explanation", ""),
-                                    possible_next_steps=parsed.get("possible_next_steps", []),
-                                    documents_needed=parsed.get("documents_needed", []),
-                                    sources=citations,
-                                    disclaimer=parsed.get("disclaimer", "NyayaSuno provides legal information, not formal legal representation. Contact NALSA at 15100 or a qualified advocate."),
-                                    missing_information=parsed.get("missing_information", []),
-                                    is_insufficient_context=is_insufficient,
-                                    suggested_questions=parsed.get("suggested_questions", [])
-                                )
-                        else:
-                            err_msg = resp.text[:200]
-                            print(f" Gemini API {model_name} returned HTTP {resp.status_code}: {err_msg}")
-                            # If API key itself is reported invalid, don't loop through all models
-                            if "API_KEY_INVALID" in err_msg or "INVALID_ARGUMENT" in err_msg:
-                                print(" Gemini API key appears invalid or malformed. Falling back to Groq / Grounded engine.")
-                                break
+                    resp = await client.post(url, headers=gemini_headers, json=payload, timeout=15.0)
+                    if resp.status_code == 200:
+                        res_json = resp.json()
+                        candidates = res_json.get("candidates", [])
+                        if candidates:
+                            raw_text = candidates[0]["content"]["parts"][0]["text"].strip()
+                            # Clean markdown JSON wrappers if present
+                            raw_text = re.sub(r"^```json\s*", "", raw_text)
+                            raw_text = re.sub(r"\s*```$", "", raw_text)
+                            parsed = json.loads(raw_text)
+                            logger.info(f"Gemini API responded successfully with model '{model_name}'.")
+                            return LegalAnswerStructured(
+                                understanding=parsed.get("understanding", "We analyzed your situation."),
+                                relevant_laws=parsed.get("relevant_laws", []),
+                                simple_explanation=parsed.get("simple_explanation", ""),
+                                possible_next_steps=parsed.get("possible_next_steps", []),
+                                documents_needed=parsed.get("documents_needed", []),
+                                sources=citations,
+                                disclaimer=parsed.get("disclaimer", "NyayaSuno provides legal information, not formal legal representation. Contact NALSA at 15100 or a qualified advocate."),
+                                missing_information=parsed.get("missing_information", []),
+                                is_insufficient_context=is_insufficient,
+                                suggested_questions=parsed.get("suggested_questions", [])
+                            )
+                    else:
+                        err_msg = resp.text[:200]
+                        logger.warning(f"Gemini API {model_name} returned HTTP {resp.status_code}: {err_msg}")
+                        # If API key itself is reported invalid, don't loop through all models
+                        if "API_KEY_INVALID" in err_msg or "INVALID_ARGUMENT" in err_msg:
+                            logger.warning("Gemini API key appears invalid or malformed. Falling back to Groq / Grounded engine.")
+                            break
                 except Exception as e:
-                    print(f"Gemini API attempt with {model_name} failed: {e}. Trying next...")
+                    logger.debug(f"Gemini API attempt with {model_name} failed: {e}. Trying next...")
 
         # 2. Try Groq LLM as secondary AI redundancy if Gemini is unavailable
         if self.groq_api_key:
@@ -153,29 +157,30 @@ class GeminiService:
                     "response_format": {"type": "json_object"},
                     "temperature": 0.2
                 }
-                async with httpx.AsyncClient(timeout=20.0) as client:
-                    resp = await client.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=groq_payload)
-                    if resp.status_code == 200:
-                        content = resp.json()["choices"][0]["message"]["content"]
-                        parsed = json.loads(content)
-                        print(" Groq LLM fallback responded successfully.")
-                        return LegalAnswerStructured(
-                            understanding=parsed.get("understanding", "We analyzed your situation."),
-                            relevant_laws=parsed.get("relevant_laws", []),
-                            simple_explanation=parsed.get("simple_explanation", ""),
-                            possible_next_steps=parsed.get("possible_next_steps", []),
-                            documents_needed=parsed.get("documents_needed", []),
-                            sources=citations,
-                            disclaimer=parsed.get("disclaimer", "NyayaSuno provides legal information, not formal representation."),
-                            missing_information=parsed.get("missing_information", []),
-                            is_insufficient_context=is_insufficient,
-                            suggested_questions=parsed.get("suggested_questions", [])
-                        )
+                client = HTTPClientPool.get_client()
+                resp = await client.post("https://api.groq.com/openai/v1/chat/completions", headers=headers, json=groq_payload, timeout=20.0)
+                if resp.status_code == 200:
+                    content = resp.json()["choices"][0]["message"]["content"]
+                    parsed = json.loads(content)
+                    logger.info("Groq LLM fallback responded successfully.")
+                    return LegalAnswerStructured(
+                        understanding=parsed.get("understanding", "We analyzed your situation."),
+                        relevant_laws=parsed.get("relevant_laws", []),
+                        simple_explanation=parsed.get("simple_explanation", ""),
+                        possible_next_steps=parsed.get("possible_next_steps", []),
+                        documents_needed=parsed.get("documents_needed", []),
+                        sources=citations,
+                        disclaimer=parsed.get("disclaimer", "NyayaSuno provides legal information, not formal representation."),
+                        missing_information=parsed.get("missing_information", []),
+                        is_insufficient_context=is_insufficient,
+                        suggested_questions=parsed.get("suggested_questions", [])
+                    )
             except Exception as e:
-                print(f"Groq LLM fallback failed: {e}")
+                logger.error(f"Groq LLM fallback failed: {e}")
 
         # 3. Resilient Grounded Rule Engine
-        print(" Using verified Grounded Statutory Rule Engine.")
+        logger.info("Using verified Grounded Statutory Rule Engine.")
+        return self._generate_grounded_fallback(query, citations, is_insufficient, language)
         return self._generate_grounded_fallback(query, citations, is_insufficient, language)
 
     def _generate_grounded_fallback(

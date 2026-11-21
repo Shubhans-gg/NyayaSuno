@@ -141,10 +141,14 @@ async def send_voice_chat(
     }
 
 @router.get("/conversations", response_model=List[ConversationSummary])
-async def list_conversations(current_user: Optional[dict] = Depends(get_current_user_optional)):
-    """List all conversations for authenticated user or recent conversations for guest."""
+async def list_conversations(
+    ids: Optional[str] = None,
+    current_user: Optional[dict] = Depends(get_current_user_optional)
+):
+    """List all conversations for authenticated user or specific conversation IDs for guest."""
     user_id = current_user["sub"] if current_user else None
-    convs = DatabaseManager.get_user_conversations(user_id=user_id)
+    conv_id_list = [i.strip() for i in ids.split(",") if i.strip()] if ids else None
+    convs = DatabaseManager.get_user_conversations(user_id=user_id, conv_ids=conv_id_list)
     return convs
 
 @router.get("/conversations/{conv_id}", response_model=ConversationDetail)
